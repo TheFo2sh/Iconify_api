@@ -16,11 +16,12 @@ import { initVersionResponse, versionResponse } from './responses/version.js';
 import { generateIconsStyleResponse } from './responses/css.js';
 import { handleJSONResponse } from './helpers/send.js';
 import { errorText } from './helpers/errors.js';
+import { registerOpenAPI } from './openapi.js';
 
 /**
  * Start HTTP server
  */
-export async function startHTTPServer() {
+export async function createHTTPServer() {
 	// Create HTP server
 	const server = fastify({
 		routerOptions: {
@@ -30,6 +31,7 @@ export async function startHTTPServer() {
 
 	// Support `application/x-www-form-urlencoded`
 	server.register(fastifyFormBody);
+	await registerOpenAPI(server);
 
 	// Generate headers to send
 	interface Header {
@@ -217,6 +219,16 @@ export async function startHTTPServer() {
 
 		res.send();
 	});
+
+	// Start it
+	return server;
+}
+
+/**
+ * Start HTTP server
+ */
+export async function startHTTPServer() {
+	const server = await createHTTPServer();
 
 	// Start it
 	console.log('Listening on', appConfig.host + ':' + appConfig.port);
