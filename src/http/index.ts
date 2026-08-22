@@ -22,7 +22,7 @@ import { registerOpenAPI } from './openapi.js';
  * Start HTTP server
  */
 export async function createHTTPServer() {
-	// Create HTP server
+	// Create HTTP server
 	const server = fastify({
 		routerOptions: {
 			caseSensitive: true,

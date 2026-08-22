@@ -2,7 +2,6 @@ import { readFile } from 'node:fs/promises';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import type { FastifyInstance, FastifySchema } from 'fastify';
-import { appConfig } from '../config/app.js';
 
 const objectWithAdditionalProperties = {
 	type: 'object',
@@ -992,7 +991,7 @@ export async function registerOpenAPI(server: FastifyInstance) {
 			},
 			servers: [
 				{
-					url: `http://${appConfig.host}:${appConfig.port}`,
+					url: '/',
 				},
 			],
 			components: {
