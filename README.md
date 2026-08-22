@@ -44,6 +44,8 @@ Then you can start server:
 npm run start
 ```
 
+When running outside production (`NODE_ENV` is anything other than `production`), the API also exposes OpenAPI documentation at `/swagger/v1/swagger.json` and Swagger UI at `/swagger/`.
+
 By default, server will:
 
 -   Automatically load latest icons from [`@iconify/json`](https://github.com/iconify/icon-sets).
