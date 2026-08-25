@@ -18,6 +18,85 @@ import { handleJSONResponse } from './helpers/send.js';
 import { errorText } from './helpers/errors.js';
 import { registerOpenAPI } from './openapi.js';
 
+function getWelcomePageHTML() {
+	const docsURL = appConfig.redirectIndex
+		.replaceAll('&', '&amp;')
+		.replaceAll('"', '&quot;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;');
+
+	return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iconify API</title>
+<style>
+	:root {
+		color-scheme: light dark;
+		font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	}
+	body {
+		margin: 0;
+		min-height: 100dvh;
+		display: grid;
+		place-items: center;
+		padding: 1.5rem;
+		background: Canvas;
+		color: CanvasText;
+	}
+	main {
+		width: min(100%, 44rem);
+		padding: clamp(1.5rem, 3vw, 2.5rem);
+		border: 1px solid color-mix(in oklab, CanvasText 18%, Canvas);
+		border-radius: 1rem;
+		background: color-mix(in oklab, Canvas 94%, CanvasText 6%);
+	}
+	h1 {
+		margin: 0 0 0.75rem;
+		font-size: clamp(2rem, 5vw, 3rem);
+		line-height: 1.1;
+	}
+	p {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.65;
+	}
+	.intro {
+		margin-bottom: 0.5rem;
+		font-weight: 600;
+		font-size: 0.95rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		opacity: 0.75;
+	}
+	.cta {
+		display: inline-block;
+		margin-top: 1.5rem;
+		padding: 0.7rem 1rem;
+		border-radius: 0.6rem;
+		text-decoration: none;
+		font-weight: 600;
+		background: #1769ff;
+		color: #fff;
+	}
+	.cta:focus-visible {
+		outline: 2px solid #1769ff;
+		outline-offset: 2px;
+	}
+</style>
+</head>
+<body>
+<main>
+	<p class="intro">Welcome</p>
+	<h1>Iconify API</h1>
+	<p>Access thousands of open-source icons in SVG, JSON, CSS, and JavaScript formats through a single API endpoint.</p>
+	<a class="cta" href="${docsURL}">Get started</a>
+</main>
+</body>
+</html>`;
+}
+
 /**
  * Start HTTP server
  */
@@ -201,9 +280,9 @@ export async function createHTTPServer() {
 		});
 	}
 
-	// Redirect
+	// Welcome page
 	server.get('/', (req, res) => {
-		res.redirect(appConfig.redirectIndex, 301);
+		res.type('text/html; charset=utf-8').send(getWelcomePageHTML());
 	});
 
 	// Error handling
