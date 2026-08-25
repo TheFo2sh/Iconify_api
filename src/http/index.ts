@@ -19,11 +19,15 @@ import { errorText } from './helpers/errors.js';
 import { registerOpenAPI } from './openapi.js';
 
 function getWelcomePageHTML() {
-	const docsURL = appConfig.redirectIndex
-		.replaceAll('&', '&amp;')
-		.replaceAll('"', '&quot;')
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;');
+	const escapeHTMLAttribute = (value: string) =>
+		value
+			.replaceAll('&', '&amp;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#39;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;');
+
+	const docsURL = escapeHTMLAttribute(appConfig.redirectIndex);
 
 	return `<!doctype html>
 <html lang="en">
@@ -77,11 +81,11 @@ function getWelcomePageHTML() {
 		border-radius: 0.6rem;
 		text-decoration: none;
 		font-weight: 600;
-		background: #1769ff;
+		background: #0050d8;
 		color: #fff;
 	}
 	.cta:focus-visible {
-		outline: 2px solid #1769ff;
+		outline: 2px solid currentColor;
 		outline-offset: 2px;
 	}
 </style>
@@ -96,6 +100,8 @@ function getWelcomePageHTML() {
 </body>
 </html>`;
 }
+
+const welcomePageHTML = getWelcomePageHTML();
 
 /**
  * Start HTTP server
@@ -282,7 +288,7 @@ export async function createHTTPServer() {
 
 	// Welcome page
 	server.get('/', (req, res) => {
-		res.type('text/html; charset=utf-8').send(getWelcomePageHTML());
+		res.type('text/html; charset=utf-8').send(welcomePageHTML);
 	});
 
 	// Error handling

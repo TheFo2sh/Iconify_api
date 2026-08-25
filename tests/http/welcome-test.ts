@@ -1,6 +1,13 @@
 import { createHTTPServer } from '../../lib/http/index';
 import { appConfig } from '../../lib/config/app';
 
+const escapedRedirectIndex = appConfig.redirectIndex
+	.replaceAll('&', '&amp;')
+	.replaceAll('"', '&quot;')
+	.replaceAll("'", '&#39;')
+	.replaceAll('<', '&lt;')
+	.replaceAll('>', '&gt;');
+
 describe('Welcome page', () => {
 	test('serves welcome page on root route', async () => {
 		const server = await createHTTPServer();
@@ -17,7 +24,7 @@ describe('Welcome page', () => {
 			expect(response.body).toContain('<meta name="viewport"');
 			expect(response.body).toContain('Iconify API');
 			expect(response.body).toContain('Access thousands of open-source icons');
-			expect(response.body).toContain(`href="${appConfig.redirectIndex}"`);
+			expect(response.body).toContain(`href="${escapedRedirectIndex}"`);
 		} finally {
 			await server.close();
 		}
